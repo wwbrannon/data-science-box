@@ -26,6 +26,9 @@ RUN apt-get update && apt-get -y dist-upgrade
 #
 
 RUN apt-get install -y --no-install-recommends \
+    "$(: Kerberos support for bigdisk fs)" \
+    krb5-user kstart \
+    \
     "$(: Development tools)" \
     build-essential gfortran binutils \
     autoconf automake m4 bison flex gdb libtool \
