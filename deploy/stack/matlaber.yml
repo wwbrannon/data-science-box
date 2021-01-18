@@ -1,0 +1,44 @@
+version: '2'
+
+# why doesn't jupyter find nodejs?
+
+services:
+  jupyter:
+    build:
+      context: images/pytorch-jupyter-gpu
+      args:
+        - PYTORCH_VERSION=1.6.0-cuda10.1-cudnn7-runtime
+        - LOCALE=en_US.UTF-8
+        - NB_USER=${USERNAME}
+        - NB_UID=${UID}
+        - NB_GID=${GID}
+    container_name: pytorch-jupyter-gpu
+    user: "${UID}:${GID}"
+    environment:
+      - VIRTUAL_HOST=${FQDN}
+    volumes:
+      - /mas:/mas
+      - /u:/u
+      - /tmp:/tmp
+      - /dtmp:/dtmp
+    network_mode: bridge
+    restart: always
+    deploy: # requires minimum docker-compose v1.28
+      resources:
+        reservations:
+          devices:
+            - capabilities:
+              - gpu
+
+  nginx-proxy:
+    build: images/nginx-proxy/
+    container_name: nginx-proxy
+    ports:
+      - "${UID}:443"
+    depends_on:
+      - jupyter
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    network_mode: bridge
+    restart: always
+
