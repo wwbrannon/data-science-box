@@ -101,9 +101,7 @@ ENV SHELL=/bin/bash \
 RUN groupadd -g 11 wheel && \
     groupadd -g $NB_GID $NB_UID && \
     echo "%wheel         ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    useradd -m -s /bin/bash -N -g $NB_GID -G wheel -d $HOME \
-            -u $NB_UID $NB_USER && \
-    mkdir /home/$NB_USER/notebooks
+    useradd -m -s /bin/bash -N -g $NB_GID -G wheel -u $NB_UID $NB_USER
 
 ADD pw /root/pw
 RUN echo "$NB_USER:$(cat /root/pw)" | chpasswd && \
@@ -120,4 +118,6 @@ WORKDIR $HOME
 
 ENTRYPOINT ["tini", "-g", "--"]
 CMD ["start.sh"]
+
+USER $NB_UID
 

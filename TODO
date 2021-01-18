@@ -1,2 +1,13 @@
+* ssl certs
 * postgres as docker image, incl postgis (or should postgis be on host OS?)
+* better handling of users
+    * use a docker network rather than network_mode=host
+    * make the stack run per-user?: https://www.brendanlong.com/systemd-user-services-are-amazing.html
+    * https://wiki.archlinux.org/index.php/Systemd/User#Automatic_start-up_of_systemd_user_instances
+    * https://github.com/nginx-proxy/nginx-proxy
+
+# FIXME from old README:
+# Set up postgres user with database
+# Download and install the latest anaconda3 to /opt/anaconda
+# Restore conda environments from yml files in conda/ directory.
 

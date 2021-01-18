@@ -2,6 +2,7 @@
 
 set -xe
 
+LOCALE="en_US.UTF-8"
 NVIDIA_VERSION=450
 
 #
