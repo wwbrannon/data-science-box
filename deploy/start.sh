@@ -25,5 +25,5 @@ USERNAME=$(id -un)
 EMAIL=will.brannon@gmail.com
 EOF
 
-docker-compose up --build --remove-orphans
+docker-compose up -d --build --remove-orphans
 

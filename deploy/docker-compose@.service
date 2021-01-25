@@ -1,11 +1,16 @@
 [Unit]
 Description=docker-compose:%i
+Requires=docker.service
+After=network.target
 
 [Service]
-Restart=always
+Type=oneshot
+RemainAfterExit=yes
 
 ExecStart=/bin/bash -c "~/.dkc-stacks/start.sh %i"
 ExecStop=/bin/bash -c "~/.dkc-stacks/stop.sh %i"
+
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
