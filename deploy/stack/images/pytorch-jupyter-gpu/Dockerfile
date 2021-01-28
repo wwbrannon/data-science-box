@@ -66,14 +66,16 @@ RUN conda install -y \
 RUN conda install -y \
     numpy pandas numexpr dask pytables pandasql \
     scipy scikit-learn statsmodels scikit-image patsy networkx nltk spacy \
-    torchvision tensorboard \
+    torchvision tensorboard graphviz pydot \
     matplotlib seaborn \
     \
     sqlalchemy sqlite psycopg2 \
     \
     cython jinja2 tqdm hdf5 pyyaml requests unidecode xlrd python-louvain
 
-RUN pip install torchviz torchtext
+RUN conda install -y -c pytorch torchtext
+
+RUN pip install torchviz
 
 # so we can use widgets in notebooks
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
