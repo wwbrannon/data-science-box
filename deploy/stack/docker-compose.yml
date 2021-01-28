@@ -29,8 +29,7 @@ services:
     build: images/nginx-proxy/
     container_name: nginx-proxy
     ports:
-      - "80:80"
-      - "443:443"
+      - "127.0.0.1:443:443"
     depends_on:
       - jupyter
     volumes:

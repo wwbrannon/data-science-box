@@ -37,6 +37,7 @@ RUN apt-get install -y --no-install-recommends \
     git subversion \
     curl wget \
     vim nano \
+    openssh-client ssh-askpass \
     \
     "$(: Database tools)" \
     sqlite3 unixodbc unixodbc-dev odbc-postgresql pgtop \
