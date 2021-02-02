@@ -32,7 +32,7 @@ RUN apt-get install -y --no-install-recommends \
     "$(: Development tools)" \
     build-essential gfortran binutils \
     autoconf automake m4 bison flex gdb libtool \
-    jq pkg-config shellcheck \
+    jq pkg-config shellcheck ctags \
     bzip2 gzip zip unzip \
     git subversion \
     curl wget \
@@ -76,7 +76,7 @@ RUN conda install -y \
 
 RUN conda install -y -c pytorch torchtext
 
-RUN pip install torchviz
+RUN pip install torchviz torchsummary
 
 # so we can use widgets in notebooks
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
