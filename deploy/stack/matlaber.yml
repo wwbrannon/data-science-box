@@ -48,7 +48,6 @@ services:
             args:
                 - POSTGRES_VERSION=12.6
                 - NB_UID=${UID}
-                - NB_GID=${GID}
         container_name: postgres
         user: "${UID}:${GID}"
         environment:
