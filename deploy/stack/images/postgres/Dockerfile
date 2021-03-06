@@ -1,0 +1,13 @@
+ARG POSTGRES_VERSION
+FROM postgres:${POSTGRES_VERSION}
+
+ARG NB_UID
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates krb5-user kstart
+RUN rm -rf /var/lib/apt/lists/*
+
+ADD pw /home/postgres/pw
+RUN chown ${NB_UID} /home/postgres/pw && chmod 600 /home/postgres/pw
+
