@@ -43,6 +43,9 @@ RUN apt-get install -y --no-install-recommends \
     sqlite3 unixodbc unixodbc-dev odbc-postgresql pgtop \
     postgresql-client mysql-client libpq-dev \
     \
+    "$(: R dependences)" \
+    libxml2-dev libcurl4-openssl-dev libssl-dev \
+    \
     "$(: Misc Jupyter dependencies including tex)" \
     sudo locales tzdata fonts-liberation fonts-dejavu inkscape ffmpeg \
     libsm6 libxext-dev libxrender1 lmodern netcat pandoc python-dev \
@@ -69,6 +72,8 @@ RUN conda install -y \
     scipy scikit-learn statsmodels scikit-image patsy networkx nltk spacy \
     torchvision tensorboard graphviz pydot \
     matplotlib seaborn \
+    \
+    pymc3 pystan rpy2 \
     \
     sqlalchemy sqlite psycopg2 \
     \
