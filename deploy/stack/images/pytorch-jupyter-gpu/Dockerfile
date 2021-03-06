@@ -11,13 +11,20 @@ ENV CONDA_DIR=/opt/conda
 USER root
 
 #
-# Install updates
+# Configure repos, install updates
 #
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates apt-transport-https apt-utils
+    curl gnupg ca-certificates apt-transport-https apt-utils lsb-release \
+    software-properties-common
+
+RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+    | apt-key add -
+RUN apt-add-repository \
+    "deb http://apt.postgresql.org/pub/repos/apt/ \
+    $(lsb_release -cs)-pgdg main"
 
 RUN apt-get update && apt-get -y dist-upgrade
 
