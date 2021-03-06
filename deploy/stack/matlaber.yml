@@ -12,7 +12,8 @@ services:
                 - NB_USER=${USERNAME}
                 - NB_UID=${UID}
                 - NB_GID=${GID}
-        container_name: pytorch-jupyter-gpu
+        container_name: jupyter
+        hostname: jupyter
         user: "${UID}:${GID}"
         environment:
             - VIRTUAL_HOST=${FQDN}
@@ -21,7 +22,8 @@ services:
             - /u:/u
             - /tmp:/tmp
             - /dtmp:/dtmp
-        network_mode: bridge
+        networks:
+            - stack
         restart: always
         deploy: # requires minimum docker-compose v1.28
             resources:
@@ -32,14 +34,16 @@ services:
 
     nginx-proxy:
         build: images/nginx-proxy/
-        container_name: nginx-proxy
+        container_name: nginx
+        hostname: nginx
         ports:
             - "${UID}:443"
         depends_on:
             - jupyter
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
-        network_mode: bridge
+        networks:
+            - stack
         restart: always
 
     postgres:
@@ -49,6 +53,7 @@ services:
                 - POSTGRES_VERSION=12.6
                 - NB_UID=${UID}
         container_name: postgres
+        hostname: postgres
         user: "${UID}:${GID}"
         environment:
             - PGDATA=/u/${USERNAME}/data/postgres
@@ -58,5 +63,11 @@ services:
             - /u:/u
             - /tmp:/tmp
             - /dtmp:/dtmp
+        networks:
+            - stack
         restart: always
+
+networks:
+    stack:
+        driver: bridge
 
