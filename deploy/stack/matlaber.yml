@@ -51,6 +51,7 @@ services:
             context: images/postgres/
             args:
                 - POSTGRES_VERSION=12.6
+                - POSTGIS_VERSION=postgresql-12-postgis-3
                 - NB_UID=${UID}
                 - NB_GID=${GID}
         container_name: postgres
