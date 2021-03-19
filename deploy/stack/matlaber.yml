@@ -1,7 +1,5 @@
 version: '2'
 
-# why doesn't jupyter find nodejs?
-
 services:
     jupyter:
         build:

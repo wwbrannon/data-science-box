@@ -1,39 +1,67 @@
 version: '2'
 
 services:
-  jupyter:
-    build:
-      context: images/pytorch-jupyter-gpu
-      args:
-        - PYTORCH_VERSION=1.7.0-cuda11.0-cudnn8-runtime
-        - LOCALE=en_US.UTF-8
-        - NB_USER=${USERNAME}
-        - NB_UID=${UID}
-        - NB_GID=${GID}
-    container_name: pytorch-jupyter-gpu
-    user: "${UID}:${GID}"
-    environment:
-      - VIRTUAL_HOST=${FQDN}
-    volumes:
-      - /home:/hosthome
-    network_mode: bridge
-    restart: always
-    deploy: # requires minimum docker-compose v1.28
-      resources:
-        reservations:
-          devices:
-            - capabilities:
-              - gpu
+    jupyter:
+        build:
+            context: images/pytorch-jupyter-gpu
+            args:
+                - PYTORCH_VERSION=1.6.0-cuda10.1-cudnn7-runtime
+                - LOCALE=en_US.UTF-8
+                - NB_USER=${USERNAME}
+                - NB_UID=${UID}
+                - NB_GID=${GID}
+        container_name: jupyter
+        hostname: jupyter
+        user: "${UID}:${GID}"
+        environment:
+            - VIRTUAL_HOST=${FQDN}
+        volumes:
+            - /home:/hosthome
+        networks:
+            - stack
+        restart: always
+        deploy: # requires minimum docker-compose v1.28
+            resources:
+                reservations:
+                    devices:
+                        - capabilities:
+                            - gpu
 
-  nginx-proxy:
-    build: images/nginx-proxy/
-    container_name: nginx-proxy
-    ports:
-      - "127.0.0.1:443:443"
-    depends_on:
-      - jupyter
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    network_mode: bridge
-    restart: always
+    nginx-proxy:
+        build: images/nginx-proxy/
+        container_name: nginx
+        hostname: nginx
+        ports:
+            - "127.0.0.1:443:443"
+        depends_on:
+            - jupyter
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+        networks:
+            - stack
+        restart: always
+
+    postgres:
+        build:
+            context: images/postgres/
+            args:
+                - POSTGRES_VERSION=12.6
+                - POSTGIS_VERSION=postgresql-12-postgis-3
+                - NB_UID=${UID}
+                - NB_GID=${GID}
+        container_name: postgres
+        hostname: postgres
+        user: "${UID}:${GID}"
+        environment:
+            - PGDATA=/hosthome/${USERNAME}/data/postgresql/12/main
+            - POSTGRES_PASSWORD_FILE=/home/postgres/pw
+        volumes:
+            - /home:/hosthome
+        networks:
+            - stack
+        restart: always
+
+networks:
+    stack:
+        driver: bridge
 
