@@ -44,6 +44,7 @@ RUN apt-get install -y --no-install-recommends \
     git subversion \
     curl wget \
     vim nano \
+    screen \
     openssh-client ssh-askpass \
     \
     "$(: Database tools)" \
