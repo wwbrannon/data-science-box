@@ -44,29 +44,6 @@ services:
             - stack
         restart: always
 
-    postgres:
-        build:
-            context: images/postgres/
-            args:
-                - POSTGRES_VERSION=12.6
-                - POSTGIS_VERSION=postgresql-12-postgis-3
-                - NB_UID=${UID}
-                - NB_GID=${GID}
-        container_name: postgres
-        hostname: postgres
-        user: "${UID}:${GID}"
-        environment:
-            - PGDATA=/u/${USERNAME}/data/postgres
-            - POSTGRES_PASSWORD_FILE=/home/postgres/pw
-        volumes:
-            - /mas:/mas
-            - /u:/u
-            - /tmp:/tmp
-            - /dtmp:/dtmp
-        networks:
-            - stack
-        restart: always
-
 networks:
     stack:
         driver: bridge
