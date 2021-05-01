@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-    jupyter:
+    wbrannon-jupyter:
         build:
             context: images/pytorch-jupyter-gpu
             args:
@@ -10,7 +10,7 @@ services:
                 - NB_USER=${USERNAME}
                 - NB_UID=${UID}
                 - NB_GID=${GID}
-        container_name: jupyter
+        container_name: wbrannon-jupyter
         hostname: jupyter
         user: "${UID}:${GID}"
         environment:
@@ -21,7 +21,7 @@ services:
             - /tmp:/tmp
             - /dtmp:/dtmp
         networks:
-            - stack
+            - wbrannon-stack
         restart: always
         deploy: # requires minimum docker-compose v1.28
             resources:
@@ -32,19 +32,19 @@ services:
 
     nginx-proxy:
         build: images/nginx-proxy/
-        container_name: nginx
+        container_name: wbrannon-nginx
         hostname: nginx
         ports:
             - "${UID}:443"
         depends_on:
-            - jupyter
+            - wbrannon-jupyter
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
         networks:
-            - stack
+            - wbrannon-stack
         restart: always
 
 networks:
-    stack:
+    wbrannon-stack:
         driver: bridge
 
