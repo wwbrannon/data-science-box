@@ -1,16 +1,17 @@
 version: '2'
 
 services:
-    wbrannon-jupyter:
+    jupyter:
         build:
             context: images/pytorch-jupyter-gpu
             args:
                 - PYTORCH_VERSION=1.6.0-cuda10.1-cudnn7-runtime
+                - PYTORCH_GEOMETRIC_VERSION=1.6.0+cu101
                 - LOCALE=en_US.UTF-8
                 - NB_USER=${USERNAME}
                 - NB_UID=${UID}
                 - NB_GID=${GID}
-        container_name: wbrannon-jupyter
+        container_name: jupyter
         hostname: jupyter
         user: "${UID}:${GID}"
         environment:
@@ -21,7 +22,7 @@ services:
             - /tmp:/tmp
             - /dtmp:/dtmp
         networks:
-            - wbrannon-stack
+            - stack
         restart: always
         deploy: # requires minimum docker-compose v1.28
             resources:
@@ -32,19 +33,19 @@ services:
 
     nginx-proxy:
         build: images/nginx-proxy/
-        container_name: wbrannon-nginx
+        container_name: nginx
         hostname: nginx
         ports:
             - "${UID}:443"
         depends_on:
-            - wbrannon-jupyter
+            - jupyter
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
         networks:
-            - wbrannon-stack
+            - stack
         restart: always
 
 networks:
-    wbrannon-stack:
+    stack:
         driver: bridge
 

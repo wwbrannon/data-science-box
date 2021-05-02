@@ -5,8 +5,7 @@ ARG LOCALE
 ARG NB_UID
 ARG NB_GID
 ARG NB_USER
-
-ENV CONDA_DIR=/opt/conda
+ARG PYTORCH_GEOMETRIC_VERSION
 
 USER root
 
@@ -20,16 +19,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl gnupg ca-certificates apt-transport-https apt-utils lsb-release \
     software-properties-common
 
-RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
-    | apt-key add -
-RUN apt-add-repository \
-    "deb http://apt.postgresql.org/pub/repos/apt/ \
-    $(lsb_release -cs)-pgdg main"
+RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN apt-add-repository "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main"
 
 RUN apt-get update && apt-get -y dist-upgrade
 
 #
-# Install software
+# Install system software
 #
 
 RUN apt-get install -y --no-install-recommends \
@@ -62,8 +58,6 @@ RUN apt-get install -y --no-install-recommends \
 
 RUN rm -rf /var/lib/apt/lists/*
 
-RUN echo "${LOCALE} UTF-8" > /etc/locale.gen && locale-gen
-
 #
 # Update conda and install software
 #
@@ -73,6 +67,16 @@ RUN conda update -n base -c defaults conda
 # Jupyter and friends
 RUN conda install -y \
     tini notebook jupyter jupyterhub jupyterlab nbconvert nbformat ipywidgets
+
+# Pytorch add-on packages
+RUN conda install -y -c pytorch torchtext
+RUN pip install torchviz torchsummary
+
+RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
+    pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
+    pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
+    pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
+    pip install torch-geometric
 
 # misc non-pytorch data science packages
 RUN conda install -y \
@@ -86,10 +90,6 @@ RUN conda install -y \
     sqlalchemy sqlite psycopg2 \
     \
     cython jinja2 tqdm hdf5 pyyaml requests unidecode xlrd python-louvain
-
-RUN conda install -y -c pytorch torchtext
-
-RUN pip install torchviz torchsummary
 
 # so we can use widgets in notebooks
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
@@ -105,18 +105,16 @@ RUN cd /tmp && \
 RUN conda clean --all -y && \
     npm cache clean --force
 
-RUN mkdir -p /etc/jupyter/
-COPY jupyterhub_config.py /etc/jupyter/
-
 #
-# Finalize
+# Our configuration
 #
 
-ENV SHELL=/bin/bash \
-    LC_ALL=$LOCALE \
+RUN echo "${LOCALE} UTF-8" > /etc/locale.gen && locale-gen
+ENV LC_ALL=$LOCALE \
     LANG=$LOCALE \
     LANGUAGE=$LOCALE \
-    PATH=$CONDA_DIR/bin:$PATH \
+    SHELL=/bin/bash \
+    PATH=/opt/conda/bin:$PATH \
     HOME=/home/$NB_USER
 
 RUN groupadd -g 11 wheel && \
@@ -126,15 +124,22 @@ RUN groupadd -g 11 wheel && \
             -u $NB_UID $NB_USER && \
     mkdir /home/$NB_USER/notebooks
 
-ADD pw /root/pw
+COPY pw /root/pw
 RUN echo "$NB_USER:$(cat /root/pw)" | chpasswd && \
     rm -f /root/pw
 
-ADD fix-permissions /usr/local/bin/fix-permissions
+RUN mkdir -p /etc/jupyter/
+COPY jupyterhub_config.py /etc/jupyter/
+
+COPY fix-permissions /usr/local/bin/fix-permissions
 RUN chmod ugo+x /usr/local/bin/fix-permissions
 RUN fix-permissions $HOME /etc/jupyter/
 
 COPY start.sh /usr/local/bin/
+
+#
+# Finalize
+#
 
 EXPOSE 8000
 WORKDIR $HOME
