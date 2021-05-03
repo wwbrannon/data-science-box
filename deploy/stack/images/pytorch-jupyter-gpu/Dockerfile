@@ -91,6 +91,11 @@ RUN conda install -y \
     \
     cython jinja2 tqdm hdf5 pyyaml requests unidecode xlrd python-louvain
 
+# misc data science packages from other channels
+RUN conda install -c conda-forge sentencepiece emoji
+RUN conda install -c huggingface transformers
+RUN conda install -c huggingface -c conda-forge datasets
+
 # so we can use widgets in notebooks
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
 
