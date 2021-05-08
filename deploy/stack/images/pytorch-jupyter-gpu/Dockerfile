@@ -63,14 +63,12 @@ RUN rm -rf /var/lib/apt/lists/*
 #
 
 RUN conda update -n base -c defaults conda
-
-# Jupyter and friends
 RUN conda install -y \
     tini notebook jupyter jupyterhub jupyterlab nbconvert nbformat ipywidgets
 
 # Pytorch add-on packages
-RUN conda install -y -c pytorch torchtext
-RUN pip install torchviz torchsummary
+RUN conda install -y -c pytorch torchtext torchvision
+RUN pip install torchviz torchsummary tensorboard
 
 RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
     pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
@@ -82,19 +80,15 @@ RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-${PYTOR
 RUN conda install -y \
     numpy pandas numexpr dask pytables pandasql \
     scipy scikit-learn statsmodels scikit-image patsy networkx nltk spacy \
-    torchvision tensorboard graphviz pydot \
-    matplotlib seaborn \
-    \
-    pymc3 pystan rpy2 \
-    \
+    cython jinja2 tqdm hdf5 pyyaml requests unidecode xlrd python-louvain \
+    graphviz pydot matplotlib seaborn \
     sqlalchemy sqlite psycopg2 \
-    \
-    cython jinja2 tqdm hdf5 pyyaml requests unidecode xlrd python-louvain
+    pymc3 pystan rpy2
 
 # misc data science packages from other channels
-run conda install -c huggingface transformers
-RUN conda install -c huggingface -c conda-forge datasets
 RUN conda install -c conda-forge sentencepiece emoji pytorch-lightning
+RUN conda install -c huggingface -c conda-forge datasets
+RUN conda install -c conda-forge transformers
 
 # so we can use widgets in notebooks
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
