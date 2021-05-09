@@ -84,7 +84,7 @@ RUN conda install -y -c huggingface -c conda-forge \
 RUN conda install -y -c \
     conda-forge transformers sentencepiece emoji pytorch-lightning
 
-RUN pip install torchviz torchsummary tensorboard
+RUN pip install torchviz torchsummary tensorboard pytorch-lightning-bolts
 RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
     pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
     pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
