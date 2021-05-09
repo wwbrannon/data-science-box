@@ -63,21 +63,10 @@ RUN rm -rf /var/lib/apt/lists/*
 #
 
 RUN conda update -n base -c defaults conda
+
 RUN conda install -y \
-    tini notebook jupyter jupyterhub jupyterlab nbconvert nbformat ipywidgets
-
-# Pytorch add-on packages
-RUN conda install -y -c pytorch torchtext torchvision
-RUN pip install torchviz torchsummary tensorboard
-
-RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
-    pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
-    pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
-    pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
-    pip install torch-geometric
-
-# misc non-pytorch data science packages
-RUN conda install -y \
+    tini notebook jupyter jupyterhub jupyterlab nbconvert nbformat ipywidgets \
+    \
     numpy pandas numexpr dask pytables pandasql \
     scipy scikit-learn statsmodels scikit-image patsy networkx nltk spacy \
     cython jinja2 tqdm hdf5 pyyaml requests unidecode xlrd python-louvain \
@@ -86,9 +75,21 @@ RUN conda install -y \
     pymc3 pystan rpy2
 
 # misc data science packages from other channels
-RUN conda install -c conda-forge sentencepiece emoji pytorch-lightning
-RUN conda install -c huggingface -c conda-forge datasets
-RUN conda install -c conda-forge transformers
+RUN conda install -y -c pytorch \
+    torchtext torchvision
+
+RUN conda install -y -c huggingface -c conda-forge \
+    datasets
+
+RUN conda install -y -c \
+    conda-forge transformers sentencepiece emoji pytorch-lightning
+
+RUN pip install torchviz torchsummary tensorboard
+RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
+    pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
+    pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
+    pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
+    pip install torch-geometric
 
 # so we can use widgets in notebooks
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
