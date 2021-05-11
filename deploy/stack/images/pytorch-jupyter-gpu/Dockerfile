@@ -47,9 +47,6 @@ RUN apt-get install -y --no-install-recommends \
     sqlite3 unixodbc unixodbc-dev odbc-postgresql pgtop \
     postgresql-client mysql-client libpq-dev \
     \
-    "$(: R dependences)" \
-    libxml2-dev libcurl4-openssl-dev libssl-dev \
-    \
     "$(: Misc Jupyter dependencies including tex)" \
     sudo locales tzdata fonts-liberation fonts-dejavu inkscape ffmpeg \
     libsm6 libxext-dev libxrender1 lmodern netcat pandoc python-dev \
@@ -67,24 +64,23 @@ RUN conda update -n base -c defaults conda
 RUN conda install -y \
     tini notebook jupyter jupyterhub jupyterlab nbconvert nbformat ipywidgets \
     \
-    numpy pandas numexpr dask pytables pandasql \
+    numpy pandas numexpr pandasql \
     scipy scikit-learn statsmodels scikit-image patsy networkx nltk spacy \
-    cython jinja2 tqdm hdf5 pyyaml requests unidecode xlrd python-louvain \
+    jinja2 tqdm pyyaml requests unidecode python-louvain \
     graphviz pydot matplotlib seaborn \
-    sqlalchemy sqlite psycopg2 \
-    pymc3 pystan rpy2
+    sqlalchemy sqlite psycopg2
 
-# misc data science packages from other channels
 RUN conda install -y -c pytorch \
-    torchtext torchvision
+    torchtext torchvision torchaudio captum
 
 RUN conda install -y -c huggingface -c conda-forge \
     datasets
 
-RUN conda install -y -c \
-    conda-forge transformers sentencepiece emoji pytorch-lightning
+RUN conda install -y -c conda-forge \
+    transformers sentencepiece emoji tensorboard
 
-RUN pip install torchviz torchsummary tensorboard pytorch-lightning-bolts
+# These are not kept up to date enough on conda and so we go elsewhere
+RUN pip install torchviz torchsummary pytorch-lightning pytorch-lightning-bolts
 RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
     pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
     pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-${PYTORCH_GEOMETRIC_VERSION}.html && \
