@@ -77,7 +77,7 @@ RUN conda install -y -c huggingface -c conda-forge \
     datasets
 
 RUN conda install -y -c conda-forge \
-    transformers sentencepiece emoji tensorboard
+    transformers sentencepiece emoji tensorboard jupyterlab-git
 
 # These are not kept up to date enough on conda and so we go elsewhere
 RUN pip install torchviz torchsummary pytorch-lightning pytorch-lightning-bolts
