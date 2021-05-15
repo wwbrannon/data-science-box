@@ -80,7 +80,7 @@ apt-get install -y --no-install-recommends \
     docker-ce docker-ce-cli containerd.io \
     \
     "$(: NVIDIA stuff)" \
-    "nvidia-headless-$(NVIDIA_VERSION)" "nvidia-utils-$(NVIDIA_VERSION)" \
+    "nvidia-headless-$NVIDIA_VERSION" "nvidia-utils-$NVIDIA_VERSION" \
     nvidia-docker2
 
 ## Docker-compose
