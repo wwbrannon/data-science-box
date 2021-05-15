@@ -74,7 +74,7 @@ apt-get install -y --no-install-recommends \
     "$(: Misc utilities)" \
     dos2unix uni2ascii w3m lm-sensors locate mailutils parted pv rlwrap \
     screen zip unzip nmap netcat wamerican memstat members diffutils \
-    locales tzdata \
+    locales tzdata ctags \
     \
     "$(: Docker)" \
     docker-ce docker-ce-cli containerd.io \
