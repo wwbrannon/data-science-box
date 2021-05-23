@@ -5,8 +5,6 @@ services:
         build:
             context: images/pytorch-jupyter-gpu
             args:
-                - PYTORCH_VERSION=1.6.0-cuda10.1-cudnn7-runtime
-                - LOCALE=en_US.UTF-8
                 - NB_USER=${USERNAME}
                 - NB_UID=${UID}
                 - NB_GID=${GID}
