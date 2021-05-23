@@ -27,8 +27,8 @@ map $proxy_x_forwarded_proto $proxy_x_forwarded_ssl {
 }
 
 server {
+    listen                                   [::]:443 default_server ssl ipv6only=on;
     listen                                   443 default_server ssl;
-    listen                                   [::]:443 default_server ssl;
 
     ssl_certificate                          /etc/nginx/certs/ssl.crt;
     ssl_certificate_key                      /etc/nginx/certs/ssl.key;
@@ -57,8 +57,8 @@ server {
 }
 
 server {
+    listen                                   [::]:${TENSORBOARD_PORT} default_server ssl ipv6only=on;
     listen                                   ${TENSORBOARD_PORT} default_server ssl;
-    listen                                   [::]:${TENSORBOARD_PORT} default_server ssl;
 
     ssl_certificate                          /etc/nginx/certs/ssl.crt;
     ssl_certificate_key                      /etc/nginx/certs/ssl.key;
