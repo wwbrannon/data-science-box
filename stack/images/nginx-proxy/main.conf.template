@@ -3,7 +3,7 @@ upstream jupyterhub {
 }
 
 upstream tensorboard {
-    server                                   jupyter:6006;
+    server                                   jupyter:${TENSORBOARD_PORT};
 }
 
 map $http_upgrade $connection_upgrade {
@@ -28,6 +28,8 @@ map $proxy_x_forwarded_proto $proxy_x_forwarded_ssl {
 
 server {
     listen                                   443 default_server ssl;
+    listen                                   [::]:443 default_server ssl;
+
     ssl_certificate                          /etc/nginx/certs/ssl.crt;
     ssl_certificate_key                      /etc/nginx/certs/ssl.key;
 
@@ -55,7 +57,9 @@ server {
 }
 
 server {
-    listen                                   6006 default_server ssl;
+    listen                                   ${TENSORBOARD_PORT} default_server ssl;
+    listen                                   [::]:${TENSORBOARD_PORT} default_server ssl;
+
     ssl_certificate                          /etc/nginx/certs/ssl.crt;
     ssl_certificate_key                      /etc/nginx/certs/ssl.key;
 

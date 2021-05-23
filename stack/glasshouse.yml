@@ -11,12 +11,11 @@ services:
         container_name: jupyter
         hostname: jupyter
         user: "${UID}:${GID}"
-        environment:
-            - VIRTUAL_HOST=${FQDN}
         volumes:
             - /home:/hosthome
         networks:
             - stack
+        shm_size: '8gb'
         restart: always
         deploy: # requires minimum docker-compose v1.28
             resources:
@@ -31,6 +30,9 @@ services:
         hostname: nginx
         ports:
             - "127.0.0.1:443:443"
+            - "127.0.0.1:6006:6006"
+        environment: # this and both values under ports should be the same
+            - TENSORBOARD_PORT=6006
         depends_on:
             - jupyter
         volumes:
