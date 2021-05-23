@@ -83,10 +83,6 @@ apt-get install -y --no-install-recommends \
     "nvidia-headless-$NVIDIA_VERSION" "nvidia-utils-$NVIDIA_VERSION" \
     nvidia-docker2
 
-## Docker-compose
-# the Docker repo doesn't bundle the most up-to-date version as an apt package
-pip3 install docker-compose
-
 #
 # Security
 #
