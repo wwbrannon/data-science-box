@@ -1,9 +1,5 @@
-FROM jwilder/nginx-proxy
+FROM nginx
 
-RUN { \
-        echo 'server_tokens off;'; \
-        echo 'client_max_body_size 0;'; \
-    } > /etc/nginx/conf.d/proxy.conf
-
-ADD certs/output /etc/nginx/certs
+COPY *.conf /etc/nginx/conf.d/
+COPY certs/output /etc/nginx/certs
 
