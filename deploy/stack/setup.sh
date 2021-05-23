@@ -4,14 +4,18 @@ set -xe
 
 cd
 
-ln -s /mas/u/wbrannon/.ssh
-ln -s /mas/u/wbrannon/.bash_local
-ln -s /mas/u/wbrannon/.gitconfig_local
-ln -s /mas/u/wbrannon/github
-rmdir notebooks && ln -s /mas/u/wbrannon/notebooks
+export HOSTHOME;
+HOSTHOME=/mas/u/wbrannon
 
-eval `ssh-agent`
+ln -s "$HOSTHOME/.ssh" .
+ln -s "$HOSTHOME/.bash_local" .
+ln -s "$HOSTHOME/.gitconfig_local" .
+ln -s "$HOSTHOME/github" .
+rmdir notebooks && ln -s "$HOSTHOME/notebooks" .
+
+eval "$(ssh-agent)"
 ssh-add ~/.ssh/id_rsa
 
 git clone git@github.com:wwbrannon/dotfiles.git .dotfiles
 cd .dotfiles && bash ./setup.sh
+
