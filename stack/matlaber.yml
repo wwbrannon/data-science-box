@@ -11,8 +11,6 @@ services:
         container_name: jupyter
         hostname: jupyter
         user: "${UID}:${GID}"
-        environment:
-            - VIRTUAL_HOST=${FQDN}
         volumes:
             - /mas:/mas
             - /u:/u
@@ -35,6 +33,9 @@ services:
         hostname: nginx
         ports:
             - "${UID}:443"
+            - "6009:6009"
+        environment: # this and both values under ports should be the same
+            - TENSORBOARD_PORT=6009
         depends_on:
             - jupyter
         volumes:
