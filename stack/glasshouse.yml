@@ -17,6 +17,7 @@ services:
             - /home:/hosthome
         networks:
             - stack
+        shm_size: '8gb'
         restart: always
         deploy: # requires minimum docker-compose v1.28
             resources:
