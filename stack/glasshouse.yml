@@ -51,8 +51,11 @@ services:
                 - NB_GID=${GID}
         container_name: postgres
         hostname: postgres
+        ports:
+            - "127.0.0.1:5432:5432"
         user: "${UID}:${GID}"
         environment:
+            - PGPORT=5432
             - PGDATA=/hosthome/${USERNAME}/data/postgresql/12/main
             - POSTGRES_PASSWORD_FILE=/home/postgres/pw
         volumes:
