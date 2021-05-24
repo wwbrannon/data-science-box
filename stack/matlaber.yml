@@ -32,8 +32,8 @@ services:
         container_name: nginx
         hostname: nginx
         ports:
-            - "${UID}:443"
-            - "6009:6009"
+            - "127.0.0.1:${UID}:443"
+            - "127.0.0.1:6009:6009"
         environment: # this and both values under ports should be the same
             - TENSORBOARD_PORT=6009
         depends_on:
