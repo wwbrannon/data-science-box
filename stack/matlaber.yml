@@ -32,10 +32,10 @@ services:
         container_name: nginx
         hostname: nginx
         ports:
-            - "127.0.0.1:${UID}:443"
-            - "127.0.0.1:6009:6009"
+            - "${UID}:443"
+            - "6015:6015"
         environment: # this and both values under ports should be the same
-            - TENSORBOARD_PORT=6009
+            - TENSORBOARD_PORT=6015
         depends_on:
             - jupyter
         volumes:
